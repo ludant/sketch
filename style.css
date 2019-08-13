@@ -1,0 +1,41 @@
+body {
+  color: hsl(81, 89%, 29%);
+  font-family: sans-serif;
+  background: hsl(210, 100%, 7%);
+  text-align: center
+  display: flex;
+  max-width: 585px;
+  margin: auto;
+}
+
+#input {
+  max-width: 300px;
+  margin: auto;
+}
+
+#cssInput {
+  text-align: right;
+}
+
+#inputSize {
+  width: 50px;
+}
+
+.colored {
+  background: hsl(81, 89%, 29%);
+}
+
+
+.colorBox {
+  width: 60px;
+}
+
+#container {
+  display: grid;
+  height: 585px;
+  width: 585px;
+}
+
+.cell {
+  background: hsl(342, 94%, 10%);
+}
