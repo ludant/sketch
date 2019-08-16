@@ -1,6 +1,4 @@
-'use strict'
-
-$(document).ready(function(){
+"use strict";
 
 const container = document.querySelector("#container");
 const clearBtn = document.querySelector("#clearGrid");
@@ -25,34 +23,32 @@ let value = 10;
 let valStep = 0;
 let valLimit = 0;
 let valIncrement = 0.0;
-let baseColor = "hsl(342, 94%, 10%)"
-let monoColor = "hsl(81, 89%, 29%)"
-let background = "hsl(210, 100%, 7%)"
+let baseColor = "hsl(342, 94%, 10%)";
+let monoColor = "hsl(81, 89%, 29%)";
+let background = "hsl(210, 100%, 7%)";
 
-rainbowBtn.addEventListener('click', () => {colorMode = "rainbow"});
-monoBtn.addEventListener('click', () => {colorMode = "mono"});
-clearBtn.addEventListener('click', () => {clearGrid(baseColor)});
+rainbowBtn.addEventListener("click", () => {
+  colorMode = "rainbow";
+});
+monoBtn.addEventListener("click", () => {
+  colorMode = "mono";
+});
+clearBtn.addEventListener("click", () => {
+  clearGrid(baseColor);
+});
 inputSize.onkeyup = function(e) {
-  let key = 'which' in e ? e.which : e.keyCode;
-  if (key === 13) {changeGridSize()}
-}
-
-function changeBgColor() {
-  body.style.background = inputBg.value;
-}
-
-function changeMonoColor() {
-  body.style.color = inputMonoColor.value;
-}
-
-function changeCanvasColor() {
-
-}
-
+  let key = "which" in e ? e.which : e.keyCode;
+  if (key === 13) {
+    changeGridSize();
+  }
+};
 function changeGridSize() {
   let gridSize = Number(inputSize.value);
-  if (isNaN(gridSize)) {generateGrid(16)}
-  else {generateGrid(gridSize)}
+  if (isNaN(gridSize)) {
+    generateGrid(16);
+  } else {
+    generateGrid(gridSize);
+  }
 }
 
 function deleteGrid() {
@@ -62,77 +58,96 @@ function deleteGrid() {
 }
 
 function generateGrid(size) {
-  if (size < 1) {size = 1};
-  if (size > 64) {size = 64};
+  if (size < 1) {
+    size = 1;
+  }
+  if (size > 64) {
+    size = 64;
+  }
   deleteGrid();
   container.style.gridTemplateRows = `repeat(${size}, 1fr`;
   container.style.gridTemplateColumns = `repeat(${size}, 1fr`;
   for (let row = 0; row < size; row++) {
     for (let col = 0; col < size; col++) {
-      let item = document.createElement('div');
-      item.classList.add('cell');
+      let item = document.createElement("div");
+      item.classList.add("cell");
       item.id = `${row}x${col}`;
       container.appendChild(item);
-      item.addEventListener('mouseenter', () => {changeColor(item)});
+      item.addEventListener("mouseenter", () => {
+        changeColor(item);
+      });
     }
   }
 }
 
 function colorizeMono(element) {
-  element.addClass("colored");
+	element.removeAttribute("style");
+	element.classList.add("colored");
 }
 
 function colorizeRainbow(element) {
   hueAdjust();
   satAdjust();
   valAdjust();
-  element.style.backgroundColor = `hsl(${hue}, ${saturation}%, ${value}%`
+  element.style.backgroundColor = `hsl(${hue}, ${saturation}%, ${value}%`;
 }
 
 function hueAdjust() {
-    // check if we need to set a new hue trajectory
-    if (hueStep === 0) {
-      hueLimit = Math.floor(Math.random() * 19) + 3;
-      let target = Math.floor(Math.random() * 360);
-      // check if we need to wrap around the hue circle
-      if (Math.abs(target - hue) > 180) {
-        if (target > hue) {
-          target += -360;
-        } else {
-          target += 360;
-        }
+  // check if we need to set a new hue trajectory
+  if (hueStep === 0) {
+    hueLimit = Math.floor(Math.random() * 19) + 3;
+    let target = Math.floor(Math.random() * 360);
+    // check if we need to wrap around the hue circle
+    if (Math.abs(target - hue) > 180) {
+      if (target > hue) {
+        target += -360;
+      } else {
+        target += 360;
       }
-      hueIncrement = (target - hue)/hueLimit;
     }
-    hue += hueIncrement;
-    if (hue < 0) {hue += 360}
-    if (hue > 360) {hue += -360}
-    hueStep += 1;
-    if (hueStep >= hueLimit) {hueStep = 0; hueLimit = 0};
+    hueIncrement = (target - hue) / hueLimit;
+  }
+  hue += hueIncrement;
+  if (hue < 0) {
+    hue += 360;
+  }
+  if (hue > 360) {
+    hue += -360;
+  }
+  hueStep += 1;
+  if (hueStep >= hueLimit) {
+    hueStep = 0;
+    hueLimit = 0;
+  }
 }
 
 function satAdjust() {
   if (satStep === 0) {
     satLimit = Math.floor(Math.random() * 19) + 3;
     let target = Math.floor(Math.random() * 100);
-    satIncrement = (target - saturation)/satLimit;
+    satIncrement = (target - saturation) / satLimit;
   }
   saturation += satIncrement;
   satStep += 1;
-  if (satStep >= satLimit) {satStep = 0; satLimit = 0};
+  if (satStep >= satLimit) {
+    satStep = 0;
+    satLimit = 0;
+  }
 }
 
 function valAdjust() {
   if (valStep === 0) {
     valLimit = Math.floor(Math.random() * 19) + 3;
     let target = Math.floor(Math.random() * 100);
-    valIncrement = (target - value)/valLimit;
+    valIncrement = (target - value) / valLimit;
   }
   value += valIncrement;
   valStep += 1;
-  if (valStep >= valLimit) {valStep = 0; valLimit = 0};
+  if (valStep >= valLimit) {
+    valStep = 0;
+    valLimit = 0;
+  }
 }
-
 
 function changeColor(element) {
   if (colorMode === "mono") {
@@ -143,13 +158,14 @@ function changeColor(element) {
 }
 
 function clearGrid(color) {
-  let grid = container.querySelectorAll('.cell');
+  console.log("everybody do your share");
+  let grid = container.querySelectorAll(".cell");
+  console.log(grid);
   grid.forEach(function(item) {
     item.style.backgroundColor = color;
+    item.className = "cell";
   });
 }
 
 // starting value on pageload
 generateGrid(16);
-
-});

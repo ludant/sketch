@@ -1,10 +1,10 @@
 body {
-  color: hsl(81, 89%, 29%);
+  color: #c0d2fb;
   font-family: sans-serif;
-  background: hsl(210, 100%, 7%);
-  text-align: center
+  background: #001224;
+  text-align: center;
   display: flex;
-  max-width: 585px;
+  flex-direction: column;
   margin: auto;
 }
 
@@ -21,21 +21,31 @@ body {
   width: 50px;
 }
 
-.colored {
-  background: hsl(81, 89%, 29%);
+#container {
+  display: grid;
+  height: 585px;
+  width: 585px;
+  margin: auto;
 }
 
+.button, .input, .colorBox {
+  background: #0c3615;
+  color: #95b3f9;
+  border-radius: 6px;
+  border: 3px outset #085918;
+  margin: 3px;
+}
 
 .colorBox {
   width: 60px;
 }
 
-#container {
-  display: grid;
-  height: 585px;
-  width: 585px;
+.cell {
+  background: #310210;
 }
 
-.cell {
-  background: hsl(342, 94%, 10%);
+.colored {
+  background: #5e8c08;
 }
+
+/*# sourceMappingURL=style.css.map */
