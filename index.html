@@ -1,30 +1,43 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>sketch</title>
-  <meta charset="utf-8">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div id="input">
-    <div id="jsInput">
+  <head>
+    <title>sketch</title>
+    <meta charset="utf-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="main.css" />
+  </head>
+  <body>
+    <div id="userOptions" class="user-options">
       <span>grid size: </span>
-      <input type="text" id="inputSize" class="input" placeholder="16">
-      <button id="clearGrid" class="button">clear</button><br>
+      <input
+        type="text"
+        id="gridSize"
+        class="input grid-size"
+        placeholder="16"
+      />
+      <button id="clearBtn" class="button">clear</button><br />
       <span>color mode:</span>
-      <button id="rainbow" class="button">rainbow</button>
-      <button id="mono" class="button">mono</button><br>
-    </div>
-    <!--<div id="cssInput">
+      <button id="hslRainbowBtn" class="button">rainbow (HSL)</button>
+      <button id="rgbRainbowBtn" class="button">rainbow (RGB)</button>
+      <button id="monoBtn" class="button">mono</button><br />
+      <div>
+        <input
+          type="checkbox"
+          id="rainbowBias"
+          name="rainbowBias"
+          value="true"
+        />
+        <label for="bias">rainbow bias</label>
+      </div>
+
+      <!--<div id="cssInput">
       <span>background:  </span>
       <input type="text" id="inputBg" class="colorBox" placeholder="#001123"></input><br>
       <span>canvas:  </span><input type="text" id="inputCanvas" class="colorBox" placeholder="#32000b"></input><br>
       <span>mono color:  <span><input type="text" id="inputMonoColor" class="colorBox" placeholder="#5e8c08"></input>
-    </div>--><br><br>
-  </div>
-  <div id="container">
-  </div>
-  <script src="script.js"></script>
-</body>
+    </div>--><br /><br />
+    </div>
+    <div id="container"></div>
+    <script src="script.js"></script>
+  </body>
 </html>

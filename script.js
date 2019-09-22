@@ -1,49 +1,45 @@
 "use strict";
 
-const container = document.querySelector("#container");
-const clearBtn = document.querySelector("#clearGrid");
-const rainbowBtn = document.querySelector("#rainbow");
-const monoBtn = document.querySelector("#mono");
-const inputSize = document.querySelector("#inputSize");
-const inputBg = document.querySelector("#inputBg");
-const inputCanvas = document.querySelector("#inputCanvas");
-const inputMonoColor = document.querySelector("#inputMonoColor");
-const body = document.querySelector("body");
-let colorMode = "mono";
+function $(id) {
+  return document.getElementById(id);
+}
 
-let hue = 342;
-let hueStep = 0;
-let hueLimit = 0;
-let hueIncrement = 0;
-let saturation = 94;
-let satStep = 0;
-let satLimit = 0;
-let satIncrement = 0.0;
-let value = 10;
-let valStep = 0;
-let valLimit = 0;
-let valIncrement = 0.0;
-let baseColor = "hsl(342, 94%, 10%)";
-let monoColor = "hsl(81, 89%, 29%)";
-let background = "hsl(210, 100%, 7%)";
+function ColorVector(value = 0, index = 0, limit = 0, increment = 0) {
+  this.value = value; // current value of the color
+  this.index = index; // nth step of vector
+  this.limit = limit; // total number of steps until change to new vector
+  this.increment = increment; // size of value of each step
+}
 
-rainbowBtn.addEventListener("click", () => {
-  colorMode = "rainbow";
+$("hslRainbowBtn").addEventListener("click", () => {
+  colorMode = "hsl";
 });
-monoBtn.addEventListener("click", () => {
+
+$("rgbRainbowBtn").addEventListener("click", () => {
+  colorMode = "rgb";
+});
+
+$("monoBtn").addEventListener("click", () => {
   colorMode = "mono";
 });
-clearBtn.addEventListener("click", () => {
-  clearGrid(baseColor);
+
+$("rainbowBias").addEventListener("change", () => {
+  rainbowBias = $("rainbowBias").checked; //returns boolean
 });
-inputSize.onkeyup = function(e) {
+
+$("clearBtn").addEventListener("click", () => {
+  clearGrid(canvasColor);
+});
+
+$("gridSize").onkeyup = function(e) {
   let key = "which" in e ? e.which : e.keyCode;
   if (key === 13) {
     changeGridSize();
   }
 };
+
 function changeGridSize() {
-  let gridSize = Number(inputSize.value);
+  let gridSize = Number($("gridSize").value);
   if (isNaN(gridSize)) {
     generateGrid(16);
   } else {
@@ -52,8 +48,9 @@ function changeGridSize() {
 }
 
 function deleteGrid() {
+  let container = $("container");
   while (container.firstChild) {
-    container.removeChild(container.firstChild);
+    container.removeChild(container.lastChild);
   }
 }
 
@@ -81,91 +78,104 @@ function generateGrid(size) {
 }
 
 function colorizeMono(element) {
-	element.removeAttribute("style");
-	element.classList.add("colored");
+  element.removeAttribute("style");
+  element.classList.add("colored");
 }
 
-function colorizeRainbow(element) {
-  hueAdjust();
-  satAdjust();
-  valAdjust();
-  element.style.backgroundColor = `hsl(${hue}, ${saturation}%, ${value}%`;
+function colorizeHSL(element) {
+  stepVector(satVector, 100);
+  stepVector(lightVector, 100);
+  stepWrappingVector(hueVector, 360);
+  element.style.backgroundColor = `hsl(${hueVector.value}, ${satVector.value}%, ${lightVector.value}%)`;
 }
 
-function hueAdjust() {
-  // check if we need to set a new hue trajectory
-  if (hueStep === 0) {
-    hueLimit = Math.floor(Math.random() * 19) + 3;
-    let target = Math.floor(Math.random() * 360);
-    // check if we need to wrap around the hue circle
-    if (Math.abs(target - hue) > 180) {
-      if (target > hue) {
-        target += -360;
+function colorizeRGB(element) {
+  stepVector(redVector, 255);
+  stepVector(greenVector, 255);
+  stepVector(blueVector, 255);
+  element.style.backgroundColor = `rgb(${redVector.value}, ${greenVector.value}, ${blueVector.value})`;
+}
+
+// increments a color value by one step
+function stepVector(vector, range) {
+  // updates new vector if we've reached the limit
+  if (vector.index >= vector.limit) {
+    vector.index = 0;
+    vector.limit = Math.floor(Math.random() * 19) + 3;
+    // optional value unbiasing
+    let target;
+    if (rainbowBias) {
+      // flip a coin, make the target greater or less than current value
+      if (Math.floor(Math.random() * 2)) {
+        target = Math.floor(Math.random() * vector.value);
       } else {
-        target += 360;
+        target =
+          Math.floor(Math.random() * (range - vector.value)) + vector.value;
+      }
+    } else {
+      target = Math.floor(Math.random() * range);
+    }
+    vector.increment = (target - vector.value) / vector.limit;
+  }
+  vector.value += vector.increment;
+  vector.index++;
+}
+
+function stepWrappingVector(vector, range = 360) {
+  if (vector.index >= vector.limit) {
+    vector.index = 0;
+    vector.limit = Math.floor(Math.random() * 19) + 3;
+    let target = Math.floor(Math.random() * range);
+    // check if we need to wrap around
+    if (Math.abs(target - vector.value) > range / 2) {
+      if (target > vector.value) {
+        target += -range;
+      } else {
+        target += range;
       }
     }
-    hueIncrement = (target - hue) / hueLimit;
+    vector.increment = (target - vector.value) / vector.limit;
   }
-  hue += hueIncrement;
-  if (hue < 0) {
-    hue += 360;
-  }
-  if (hue > 360) {
-    hue += -360;
-  }
-  hueStep += 1;
-  if (hueStep >= hueLimit) {
-    hueStep = 0;
-    hueLimit = 0;
-  }
-}
-
-function satAdjust() {
-  if (satStep === 0) {
-    satLimit = Math.floor(Math.random() * 19) + 3;
-    let target = Math.floor(Math.random() * 100);
-    satIncrement = (target - saturation) / satLimit;
-  }
-  saturation += satIncrement;
-  satStep += 1;
-  if (satStep >= satLimit) {
-    satStep = 0;
-    satLimit = 0;
-  }
-}
-
-function valAdjust() {
-  if (valStep === 0) {
-    valLimit = Math.floor(Math.random() * 19) + 3;
-    let target = Math.floor(Math.random() * 100);
-    valIncrement = (target - value) / valLimit;
-  }
-  value += valIncrement;
-  valStep += 1;
-  if (valStep >= valLimit) {
-    valStep = 0;
-    valLimit = 0;
-  }
+  vector.value = Math.abs((vector.value + vector.increment) % range);
+  vector.index++;
 }
 
 function changeColor(element) {
-  if (colorMode === "mono") {
-    colorizeMono(element);
-  } else if (colorMode === "rainbow") {
-    colorizeRainbow(element);
+  switch (colorMode) {
+    case "mono":
+      colorizeMono(element);
+      break;
+    case "hsl":
+      colorizeHSL(element);
+      break;
+    case "rgb":
+      colorizeRGB(element);
+      break;
   }
 }
 
 function clearGrid(color) {
-  console.log("everybody do your share");
   let grid = container.querySelectorAll(".cell");
-  console.log(grid);
   grid.forEach(function(item) {
     item.style.backgroundColor = color;
     item.className = "cell";
   });
 }
 
-// starting value on pageload
+// init
 generateGrid(16);
+
+let colorMode = "mono";
+let rainbowBias = false;
+
+let hueVector = new ColorVector(342);
+let satVector = new ColorVector(94);
+let lightVector = new ColorVector(10);
+
+let redVector = new ColorVector(49);
+let blueVector = new ColorVector(2);
+let greenVector = new ColorVector(16);
+
+let canvasColor = "hsl(342, 94%, 10%)";
+let monoColor = "hsl(81, 89%, 29%)";
+let background = "hsl(210, 100%, 7%)";
