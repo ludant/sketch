@@ -162,13 +162,15 @@ function changeColor(element) {
 }
 
 function colorZigZag() {
-  let row = Array.from(canvas.querySelectorAll(`.row${i}`));
-  if (i % 2 === 1) {
-    row.reverse();
-  }
-  row.forEach(function(cell) {
+	for (let i = 0; i < gridSize; i++) {
+		let row = Array.from(canvas.querySelectorAll(`.row${i}`));
+		if (i % 2 === 1) {
+			row.reverse();
+		}
+		row.forEach(function(cell) {
     changeColor(cell);
-  });
+		});
+	}
 }
 
 function clearGrid(color) {
