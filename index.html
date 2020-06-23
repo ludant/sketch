@@ -17,8 +17,8 @@
       />
       <button id="clearBtn" class="button">clear</button><br />
       <span>color mode:</span>
-      <button id="hslRainbowBtn" class="button">rainbow (HSL)</button>
-      <button id="rgbRainbowBtn" class="button">rainbow (RGB)</button>
+      <button id="HSLRainbowBtn" class="button">rainbow (HSL)</button>
+      <button id="RGBRainbowBtn" class="button">rainbow (RGB)</button>
       <button id="monoBtn" class="button">mono</button><br />
       <div>
         <input
@@ -29,6 +29,12 @@
         />
         <label for="bias">rainbow bias</label>
       </div>
+      <br />
+      <div>
+        <span>colorize: </span>
+        <button id="zigZagBtn" class="button">zig zag</button>
+        <button id="hilbertBtn" class="button">hilbert</button>
+      </div>
 
       <!--<div id="cssInput">
       <span>background:  </span>
@@ -37,7 +43,7 @@
       <span>mono color:  <span><input type="text" id="inputMonoColor" class="colorBox" placeholder="#5e8c08"></input>
     </div>--><br /><br />
     </div>
-    <div id="container"></div>
+    <div id="canvas" class="canvas"></div>
     <script src="script.js"></script>
   </body>
 </html>
