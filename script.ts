@@ -32,9 +32,9 @@ $("clearBtn").addEventListener("click", () => {
 $("zigZagBtn").addEventListener("click", () => {
   colorZigZag();
 });
-// 13 is enter, so pushing enter causes generateGrid()
 $("gridSize").onkeyup = function(e) {
   let key = "which" in e ? e.which : e.keyCode;
+	// 13 is enter, so pushing enter causes generateGrid()
   if (key === 13) {
     gridSize = Number($("gridSize").value);
     if (isNaN(gridSize)) {
